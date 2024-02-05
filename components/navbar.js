@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { BellIcon, Bars3Icon, XMarkIcon, UserCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import SignOut from "./signOut";
 import Link from "next/link";
 import Web3Context from "../context/web3-context";
@@ -48,13 +48,13 @@ export default function Navbar() {
                     Home
                   </Link>
                   <Link
-                    href="/farms"
+                    href="/campaigns"
                     className={path==="farms"?"border-indigo-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium":"border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"}
                     onClick={()=>{
                       setPath("farms");
                     }}
                   >
-                    Farms
+                    Campaigns
                   </Link>
                   <Link
                     href="/challenge"
@@ -114,13 +114,9 @@ export default function Navbar() {
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-4 relative flex-shrink-0 z-20">
                   <div>
-                    <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Menu.Button className="rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 p-0.5 bg-gray-200">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      <UserIcon className="h-8 w-8 text-gray-400" />
                     </Menu.Button>
                   </div>
                   <Transition

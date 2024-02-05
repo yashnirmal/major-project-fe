@@ -2,15 +2,36 @@ import { Dialog, Transition } from "@headlessui/react";
 import {
     XMarkIcon
 } from "@heroicons/react/24/solid";
-import { Fragment } from "react";
+import { Fragment, useContext, useState } from "react";
+import Web3Context from "../context/web3-context";
+import Web3 from "web3";
 
-export default function InvestModal(props) {
+export default function InvestModal({open, setOpen, campaign}) {
+  
+  const [amount,setAmount] =useState(0);
+  const {account, contract} = useContext(Web3Context);
+  
+    const invest = async () => {
+      const amountInWei = Web3.utils.toWei(
+        amount,
+        "ether"
+      );
+      try{
+      const tx = await contract?.methods?.fundToCampaign(campaign?.campaignId).send({from: account, value: amountInWei});
+        console.log(tx)
+        window.location.reload();
+      }
+      catch(err){
+        console.error(err);
+      }
+    }
+  
     return  (
-        <Transition.Root show={props.open == "invest"} as={Fragment}>
+        <Transition.Root show={open == "invest"} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
-        onClose={props.setOpen}
+        onClose={setOpen}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -46,7 +67,7 @@ export default function InvestModal(props) {
                 <button
                   type="button"
                   className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => props.setOpen(false)}
+                  onClick={() => setOpen(false)}
                 >
                   <span className="sr-only">Close</span>
                   <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -55,7 +76,7 @@ export default function InvestModal(props) {
               <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div className="px-4 py-5 sm:px-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Invest in _farmName
+                    Invest
                   </h3>
                   <p className="mt-1 max-w-2xl text-sm text-gray-500">
                     Personal details and application.
@@ -68,7 +89,7 @@ export default function InvestModal(props) {
                         Receiver Address
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        hello farm
+                        {campaign?.receiver}
                       </dd>
                     </div>
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -76,23 +97,23 @@ export default function InvestModal(props) {
                         Description
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        Need pesticides
+                        {campaign?.description}
                       </dd>
                     </div>
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    {/* <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
                         Number of contributors
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         100
                       </dd>
-                    </div>
+                    </div> */}
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
                         Funded Amount
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        $400
+                        {campaign?.currentAmount}
                       </dd>
                     </div>
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -100,7 +121,15 @@ export default function InvestModal(props) {
                         Target Amount
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        $500
+                        {campaign?.targetAmount}
+                      </dd>
+                    </div>
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Security Amount
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {campaign?.securityAmount} ETH
                       </dd>
                     </div>
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -113,9 +142,11 @@ export default function InvestModal(props) {
                       <input
                             name="first-name"
                             id="first-name"
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
                             autoComplete="given-name"
                             className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-                            
                         />
                       </dd>
                     </div>
@@ -129,7 +160,7 @@ export default function InvestModal(props) {
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  onClick={invest}
                   className="ml-5 bg-indigo-500 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
                 >
                   Invest

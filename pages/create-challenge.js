@@ -1,176 +1,236 @@
-"use client";
-import ChallengeDetails from "../components/challengeDetails";
-import ChallengeModal from "../components/challengeModal";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import {
-    ArrowLeftCircleIcon,
-    ArrowRightCircleIcon
-} from "@heroicons/react/24/solid";
-import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import Web3Context from "../context/web3-context";
+import Web3 from 'web3'
 
-const challenges = [
-    {
-      creater: 'Alice Johnson',
-      officerInCharge: 'OfficerA',
-      description: 'Implement decentralized energy solutions',
-      proof: 'Blockchain-based energy transactions',
-      complaintAddress: '0x1aBcDeF123456...', // Replace with an actual blockchain address
-      yesVotes: 30,
-      noVotes: 10,
-      deadline: 1672531200000, // UNIX timestamp for the deadline (e.g., 01/01/2024)
-      status: 'Pending',
-      comments: 'Seeking partnerships with renewable energy providers.',
-    },
-    {
-      creater: 'Bob Smith',
-      officerInCharge: 'OfficerB',
-      description: 'Tokenize community assets',
-      proof: 'Smart contracts for asset ownership',
-      complaintAddress: '0x2bCdEfG789012...', // Replace with an actual blockchain address
-      yesVotes: 25,
-      noVotes: 5,
-      deadline: 1675209600000, // UNIX timestamp for the deadline (e.g., 02/01/2024)
-      status: 'Approved',
-      comments: 'Planning token sale to fund community projects.',
-    },
-    {
-      creater: 'Charlie Brown',
-      officerInCharge: 'OfficerC',
-      description: 'Decentralized waste management system',
-      proof: 'Blockchain traceability for waste disposal',
-      complaintAddress: '0x3cDfGhI234567...', // Replace with an actual blockchain address
-      yesVotes: 35,
-      noVotes: 8,
-      deadline: 1677888000000, // UNIX timestamp for the deadline (e.g., 03/01/2024)
-      status: 'In Progress',
-      comments: 'Testing IoT devices for waste bin monitoring.',
-    },
-    {
-      creater: 'Diana Evans',
-      officerInCharge: 'OfficerD',
-      description: 'Blockchain-based voting system',
-      proof: 'Transparent and secure voting on the blockchain',
-      complaintAddress: '0x4dEfGhI567890...', // Replace with an actual blockchain address
-      yesVotes: 40,
-      noVotes: 12,
-      deadline: 1680566400000, // UNIX timestamp for the deadline (e.g., 04/01/2024)
-      status: 'Completed',
-      comments: 'Analyzing voting data for future improvements.',
-    },
-    {
-      creater: 'Eva White',
-      officerInCharge: 'OfficerE',
-      description: 'Decentralized identity verification',
-      proof: 'Blockchain-based identity management',
-      complaintAddress: '0x5eFgHiJ678901...', // Replace with an actual blockchain address
-      yesVotes: 18,
-      noVotes: 6,
-      deadline: 1683244800000, // UNIX timestamp for the deadline (e.g., 05/01/2024)
-      status: 'Pending',
-      comments: 'Exploring partnerships with identity providers.',
-    },
-  ];
-export default function CreateChallenge() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [currentChallengeDetails,setCurrentChallengeDetails] = useState(challenges[0]);
+export default function CreateFarm() {
+  const [challengeDetails, setChallengeDetails] = useState({
+    farmId: "",
+    reason: "",
+    documents: [""],
+    deadline: "",
+    stackAmount: "",
+  });
+  const { contract, account } = useContext(Web3Context);
+
+  async function createChallenge() {
+    try {
+      const securityAmountInWei = Web3.utils.toWei(
+        challengeDetails.stackAmount,
+        "ether"
+      );
+      const tx = await contract?.methods
+        .createComplaint(parseInt(challengeDetails.farmId), challengeDetails.reason, challengeDetails.documents, challengeDetails.deadline)
+        .send({ from: account, value: securityAmountInWei });
+      console.log(tx);
+      window.location.href = "/challenge";
+    } catch (err) {
+      console.log("Error creating challenge", err);
+    }
+  }
+
   return (
-    <div className="bg-white py-12 px-4">
-      <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
-        <h2 className="text-lg leading-6 font-medium text-gray-900">
-          Challenges
-        </h2>
-        <div className="mt-3 flex sm:mt-0 sm:ml-4">
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Share
-          </button>
-          <Link href="/createChallenge">
-            <button
-                type="button"
-                className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    <div className="bg-white px-10 py-10">
+      <div className="space-y-8 divide-y divide-gray-200">
+        <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+          <div>
+            <div>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Challenge Details
+              </h3>
+              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                This information will be displayed publicly so be careful what
+                you share.
+              </p>
+            </div>
+
+            <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+              <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                 >
-                <PlusIcon className="h-4 w-4 mr-1 " aria-hidden="true"/>
-                Create
+                  Farm Id
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <div className="max-w-lg flex rounded-md shadow-sm">
+                    <input
+                      type="number"
+                      name="username"
+                      id="username"
+                      autoComplete="username"
+                      className="max-w-lg text-gray-700 p-2 shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                      value={challengeDetails.farmId}
+                      onChange={(e) => {
+                        setChallengeDetails({
+                          ...challengeDetails,
+                          farmId: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  >
+                    Reason
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <textarea
+                      id="about"
+                      name="about"
+                      rows={3}
+                      className="max-w-lg text-gray-700 p-2 shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                      value={challengeDetails.reason}
+                      onChange={(e) => {
+                        setChallengeDetails({
+                          ...challengeDetails,
+                          reason: e.target.value,
+                        });
+                      }}
+                    />
+                    <p className="mt-2 text-sm text-gray-500">
+                      Write a few sentences about yourself.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  >
+                    Stack Amount
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input
+                      type="number"
+                      className="max-w-lg text-gray-700 p-2 shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                      value={challengeDetails.stackAmount}
+                      onChange={(e) => {
+                        setChallengeDetails({
+                          ...challengeDetails,
+                          stackAmount: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                  <label className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Deadline
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input
+                      type="date"
+                      className="max-w-lg text-gray-700 p-2 shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                      value={challengeDetails.deadline}
+                      onChange={(e) => {
+                        setChallengeDetails({
+                          ...challengeDetails,
+                          deadline: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                  <label
+                    htmlFor="cover-photo"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                  >
+                    Documents
+                  </label>
+                  <div className="mt-1 sm:mt-0 sm:col-span-2 space-y-4">
+                    {challengeDetails.documents.map((document, index) => (
+                      <div className="flex gap-4 items-center">
+                        <input
+                          type="text"
+                          className="max-w-lg text-gray-700 p-2 shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                          value={document}
+                          onChange={(e) => {
+                            const newDocuments = [
+                              ...challengeDetails.documents,
+                            ];
+                            newDocuments[index] = e.target.value;
+                            setChallengeDetails({
+                              ...challengeDetails,
+                              documents: newDocuments,
+                            });
+                          }}
+                        />
+                        {index === challengeDetails.documents.length - 1 && (
+                          <button
+                            onClick={() => {
+                              const newDocuments = [
+                                ...challengeDetails.documents,
+                              ];
+                              newDocuments.push("");
+                              setChallengeDetails({
+                                ...challengeDetails,
+                                documents: newDocuments,
+                              });
+                            }}
+                            className="rounded-full border-[1.5px] border-gray-500 px-2 py-1.5 hover:bg-gray-100"
+                          >
+                            <PlusIcon
+                              className="w-4 h-5 text-gray-500"
+                              strokeWidth={3}
+                            />
+                          </button>
+                        )}
+                        {index !== challengeDetails.documents.length - 1 && (
+                          <button
+                            onClick={() => {
+                              const newDocuments = [
+                                ...challengeDetails.documents,
+                              ];
+                              newDocuments.splice(index, 1);
+                              setChallengeDetails({
+                                ...challengeDetails,
+                                documents: newDocuments,
+                              });
+                            }}
+                            className="rounded-full border-[1.5px] border-gray-500 px-2 py-1.5 hover:bg-gray-100"
+                          >
+                            <MinusIcon
+                              className="w-4 h-5 text-gray-500"
+                              strokeWidth={3}
+                            />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="pt-5">
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Cancel
             </button>
-        </Link>
+            <button
+              onClick={createChallenge}
+              className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Raise
+            </button>
+          </div>
         </div>
       </div>
-      <ul role="list" className="divide-y divide-gray-200">
-        {challenges.map((challenge) => (
-          <li key={challenge.creater}>
-            <ChallengeDetails setOpen={setIsModalOpen} setChallenge={setCurrentChallengeDetails} challenge={currentChallengeDetails}/>
-          </li>
-        ))}
-      </ul>
-      {isModalOpen && (
-        <ChallengeModal open={isModalOpen} setOpen={setIsModalOpen} challenge={currentChallengeDetails} />
-      )}
-      <nav className="border-t border-gray-200 px-4 mt-2 flex items-center justify-between sm:px-0">
-      <div className="-mt-px w-0 flex-1 flex">
-        <a
-          href="#"
-          className="border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
-        >
-          <ArrowLeftCircleIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-          Previous
-        </a>
-      </div>
-      <div className="hidden md:-mt-px md:flex">
-        <a
-          href="#"
-          className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-        >
-          1
-        </a>
-        {/* Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" */}
-        <a
-          href="#"
-          className="border-indigo-500 text-indigo-600 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-          aria-current="page"
-        >
-          2
-        </a>
-        <a
-          href="#"
-          className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-        >
-          3
-        </a>
-        <span className="border-transparent text-gray-500 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium">
-          ...
-        </span>
-        <a
-          href="#"
-          className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-        >
-          8
-        </a>
-        <a
-          href="#"
-          className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-        >
-          9
-        </a>
-        <a
-          href="#"
-          className="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-        >
-          10
-        </a>
-      </div>
-      <div className="-mt-px w-0 flex-1 flex justify-end">
-        <a
-          href="#"
-          className="border-t-2 border-transparent pt-4 pl-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
-        >
-          Next
-          <ArrowRightCircleIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-        </a>
-      </div>
-    </nav>
     </div>
   );
 }

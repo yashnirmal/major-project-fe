@@ -1,13 +1,24 @@
 import { Dialog, Transition } from "@headlessui/react";
-import {
-    PaperClipIcon,
-    XMarkIcon,
-} from "@heroicons/react/24/solid";
-import { Fragment } from "react";
+import { PaperClipIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Fragment, useContext, useState } from "react";
+import Web3Context from "../context/web3-context";
 
 export default function ChallengeModal(props) {
-    return (
-        <Transition.Root show={props.open} as={Fragment}>
+  const { contract, account } = useContext(Web3Context);
+
+  async function vote(isYes) {
+    try {
+      const tx = await contract.methods
+        .voteToComplaint(props.challenge.complaintId, isYes)
+        .send({ from: account });
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return (
+    <Transition.Root show={props.open} as={Fragment}>
       <Dialog
         as="div"
         className="fixed z-10 inset-0 overflow-y-auto"
@@ -66,18 +77,26 @@ export default function ChallengeModal(props) {
                   <dl className="sm:divide-y sm:divide-gray-200">
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
-                        Complaint Address
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {props.challenge.complaintAddress}
-                      </dd>
-                    </div>
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">
                         Creater
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                         {props.challenge.creater}
+                      </dd>
+                    </div>
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Against (FarmId)
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {props.challenge.farmId}
+                      </dd>
+                    </div>
+                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Deadline
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        {props.challenge.deadline}
                       </dd>
                     </div>
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -88,7 +107,7 @@ export default function ChallengeModal(props) {
                         {props.challenge.officerInCharge}
                       </dd>
                     </div>
-                    
+
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
                         Status
@@ -107,50 +126,42 @@ export default function ChallengeModal(props) {
                     </div>
                     <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
-                        Comments
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {props.challenge.comments}
-                      </dd>
-                    </div>
-                    <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                      <dt className="text-sm font-medium text-gray-500">
                         Proof Attachments
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        <ul
-                          role="list"
-                          className="border border-gray-200 rounded-md divide-y divide-gray-200"
-                        >
-                          <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                            <div className="w-0 flex-1 flex items-center">
-                              <PaperClipIcon
-                                className="flex-shrink-0 h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                              <span className="ml-2 flex-1 w-0 truncate">
-                                {props.challenge.proof}
-                              </span>
-                            </div>
-                            <div className="ml-4 flex-shrink-0">
-                              <a
-                                href="#"
-                                className="font-medium text-indigo-600 hover:text-indigo-500"
-                              >
-                                Download
-                              </a>
-                            </div>
-                          </li>
+                        <ul role="list" className="space-y-3">
+                          {props.challenge.proofs?.map((proof,idx) => (
+                            <li key={idx} className="text-sm font-medium text-gray-500 px-3 py-2 border rounded-lg">
+                              {proof}
+                            </li>
+                          ))}
                         </ul>
                       </dd>
                     </div>
                   </dl>
                 </div>
               </div>
+              <div className="flex items-center py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border rounded-xl mt-2 shadow-sm">
+                <dt className="text-lg font-semibold text-gray-900">Vote</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex gap-2">
+                  <button
+                    className="border rounded-full shadow-sm px-2.5 py-1.5 hover:bg-blue-100"
+                    onClick={() => vote(true)}
+                  >
+                    Favor of challenge
+                  </button>
+                  <button
+                    className="border rounded-full shadow-sm px-2.5 py-1.5 hover:bg-blue-100"
+                    onClick={() => vote(false)}
+                  >
+                    Against challenge
+                  </button>
+                </dd>
+              </div>
             </div>
           </Transition.Child>
         </div>
       </Dialog>
     </Transition.Root>
-    )
+  );
 }

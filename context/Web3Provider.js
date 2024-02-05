@@ -23,7 +23,8 @@ export default function Web3Provider({ children }) {
       const temp = await web3.eth.getAccounts();
       setAccount(temp[0]);
       
-      const user = await contract?.methods.getUserDetails().call();
+      
+      const user = await contract?.methods.getUserDetails().call({from:temp[0]});
       setUser(user);
     }
     init();

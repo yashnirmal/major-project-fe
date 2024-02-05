@@ -8,14 +8,13 @@ export default function ChallengeDetails(props) {
                 <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                   <div className="truncate">
                     <div className="flex text-sm">
-                      <p className="font-medium text-indigo-600 truncate">{props.challenge.complaintAddress}</p>
-                      <p className="ml-1 flex-shrink-0 font-normal text-gray-500">in {props.challenge.description}</p>
+                      <p className="font-medium text-indigo-600 truncate">{props.challenge?.creater}</p>
                     </div>
                     <div className="mt-2 flex">
                       <div className="flex items-center text-sm text-gray-500">
                         <CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
                         <p>
-                          Closing on {new Date(props.challenge.deadline * 1000).toISOString()}
+                          Deadline: {props.challenge?.deadline}
                         </p>
                       </div>
                     </div>

@@ -3,10 +3,11 @@ import Web3Context from "../context/web3-context";
 import { useRouter } from "next/router";
 
 export default function Login() {
-  const { account, contract,web3 } = useContext(Web3Context);
+  const { account, contract, web3 } = useContext(Web3Context);
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const router = useRouter();
+  const form = router.query.form;
 
   async function register() {
     if (description === "" || name === "") {
@@ -15,10 +16,11 @@ export default function Login() {
     }
     try {
       const tx = await contract.methods
-        .registerUser(name, description)
+        .registerUser(name, description, form)
         .send({ from: account });
+
       console.log(tx);
-      router.push("/profile");
+      window.location.href = "/profile";
     } catch (err) {
       console.log("Error registering user", err);
     }
