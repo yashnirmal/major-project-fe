@@ -3,6 +3,8 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/profile": "pages/profile.js",
+  "/login": "pages/login.js",
+  "/create-challenge": "pages/create-challenge.js",
   "/challenge": "pages/challenge.js",
-  "/": "pages/index.js"
+  "/campaigns": "pages/campaigns.js"
 }

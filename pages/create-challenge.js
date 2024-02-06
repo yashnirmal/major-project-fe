@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import Web3Context from "../context/web3-context";
+import { ChatBot } from "../components/chatBot";
 import Web3 from 'web3'
 
 export default function CreateFarm() {
@@ -12,6 +13,7 @@ export default function CreateFarm() {
     stackAmount: "",
   });
   const { contract, account } = useContext(Web3Context);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   async function createChallenge() {
     try {
@@ -223,13 +225,16 @@ export default function CreateFarm() {
               Cancel
             </button>
             <button
-              onClick={createChallenge}
+              onClick={()=> {setIsModalOpen(true)}}
               className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Raise
             </button>
           </div>
         </div>
+        {isModalOpen && (
+            <ChatBot open={isModalOpen} setOpen={setIsModalOpen} createChallenge={createChallenge}/>
+        )}
       </div>
     </div>
   );
