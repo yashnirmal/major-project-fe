@@ -30,7 +30,7 @@ export default function Campaigns() {
   console.log(allCampaigns);
 
   return (
-    <div className="bg-white py-12 px-4">
+    <div className="bg-white py-12 px-2 sm:px-4 lg:px-8">
       <div className="pb-2 border-b border-gray-200 sm:flex sm:items-center sm:justify-between">
         <h2 className="pl-1 text-lg leading-6 font-medium text-gray-900">
           All Campaigns

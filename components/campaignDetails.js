@@ -7,11 +7,11 @@ export default function FarmDetails({open, setOpen, campaign, setCampaign}) {
               <div className="ml-4 mt-4">
                 <div className="flex items-center">
                   <div className="">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
+                    <h3 className="text-md leading-6 font-medium text-gray-900">
                       Campaign Id: {campaign.campaignId}
                     </h3>
                     <p className="text-sm text-gray-500 break-all">
-                      <a href="#" >{campaign.receiver}</a>
+                      <a href="#" >@{campaign.receiver}</a>
                     </p>
                   </div>
                 </div>
@@ -44,7 +44,7 @@ export default function FarmDetails({open, setOpen, campaign, setCampaign}) {
             <div className="divide-y divide-gray-100"> 
                     <div className="flex bg-gray-100 pt-1 pb-1 border-b border-gray-300 justify-between items-center flex-wrap sm:flex-nowrap min-w-0 gap-x-4">
                         <p className="text-sm leading-6 font-medium text-gray-700">
-                        cropType
+                        Crop Type
                         </p>
                         <p className="text-sm leading-6 font-medium text-gray-500"> 
                         {campaign.cropType} 
