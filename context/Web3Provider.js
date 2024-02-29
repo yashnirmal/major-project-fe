@@ -8,6 +8,7 @@ export default function Web3Provider({ children }) {
   const [contract, setContract] = useState(null);
   const [account, setAccount] = useState(null);
   const [user, setUser] = useState(null);
+  const [officer, setOfficer] = useState(null);
 
   useEffect(() => {
     async function init() {
@@ -26,12 +27,15 @@ export default function Web3Provider({ children }) {
       
       const user = await contract?.methods.getUserDetails().call({from:temp[0]});
       setUser(user);
+      
+      const officer = await contract?.methods.getOfficerDetails().call({from:temp[0]});
+      setOfficer(officer);
     }
     init();
   }, []);
 
   return (
-    <Web3Context.Provider value={{ web3, contract, account, user }}>
+    <Web3Context.Provider value={{ web3, contract, account, user , officer}}>
       {children}
     </Web3Context.Provider>
   );

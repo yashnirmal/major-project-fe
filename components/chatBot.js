@@ -46,21 +46,21 @@ export function ChatBot(props) {
 
     const handleUserAnswers = () => {
         props.setOpen(false);
-        if((userAnswers[0] && ((!userAnswers[1]) || (!userAnswers[2]))) || 
-        (!userAnswers[0] && userAnswers[3] && !userAnswers[4]) 
-        // (userAnswers[5] && (!userAnswers[6] || !userAnswers[7])) || 
-        // (!userAnswers[5] && userAnswers[8]) || 
-        // (userAnswers[9] && (!userAnswers[10] || !userAnswers[11])) || 
-        // (!userAnswers[9] && userAnswers[12]) || 
-        // (userAnswers[13] && (!userAnswers[14] || !userAnswers[15])) ||
-        // (userAnswers[13] && userAnswers[16])
-        ) {
-            alert("Sorry your challenge seems suscpicious");
-            router.push("/challenge");
-        } else {
-            console.log(userAnswers[0],userAnswers[1], userAnswers[2])
+        // if((userAnswers[0] && ((!userAnswers[1]) || (!userAnswers[2]))) || 
+        // (!userAnswers[0] && userAnswers[3] && !userAnswers[4]) 
+        // // (userAnswers[5] && (!userAnswers[6] || !userAnswers[7])) || 
+        // // (!userAnswers[5] && userAnswers[8]) || 
+        // // (userAnswers[9] && (!userAnswers[10] || !userAnswers[11])) || 
+        // // (!userAnswers[9] && userAnswers[12]) || 
+        // // (userAnswers[13] && (!userAnswers[14] || !userAnswers[15])) ||
+        // // (userAnswers[13] && userAnswers[16])
+        // ) {
+        //     alert("Sorry your challenge seems suscpicious");
+        //     router.push("/challenge");
+        // } else {
+        //     console.log(userAnswers[0],userAnswers[1], userAnswers[2])
             props.createChallenge();
-        }
+        // }
     }
     return (
         <Transition.Root show={props.open} as={Fragment}>

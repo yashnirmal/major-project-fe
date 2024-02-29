@@ -10,9 +10,9 @@ const user = {
 };
 
 export default function ProfileDetails() {
-  const { account, contract, user } = useContext(Web3Context);
+  const { account, contract, user , officer} = useContext(Web3Context);
   const router = useRouter();
-  
+  const isUser = user?.name !== "";
   // if(user && user.isRegistered === false){
   //   router.push('/login');
   // }
@@ -61,7 +61,7 @@ export default function ProfileDetails() {
                   name="about"
                   rows={3}
                   className="shadow-sm p-2 focus:ring-sky-500 focus:border-sky-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                  defaultValue={user?.description}
+                  defaultValue={isUser? user?.description : officer?.description}
                 />
               </div>
               <p className="mt-2 text-sm text-gray-500">
@@ -87,7 +87,7 @@ export default function ProfileDetails() {
               id="first-name"
               autoComplete="given-name"
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              defaultValue={user?.name?.split(" ")[0]}
+              defaultValue={isUser? user?.name?.split(" ")[0] : officer?.name?.split(" ")[0]}
             />
           </div>
 
@@ -104,7 +104,7 @@ export default function ProfileDetails() {
               id="last-name"
               autoComplete="family-name"
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-sky-500 focus:border-sky-500 sm:text-sm"
-              defaultValue={user?.name?.split(" ")[1]}
+              defaultValue={isUser? user?.name?.split(" ")[1] : officer?.name?.split(" ")[1]}
             />
           </div>
         </div>

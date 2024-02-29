@@ -15,12 +15,18 @@ export default function Login() {
       return;
     }
     try {
-      const tx = await contract.methods
-        .registerUser(name, description, form)
-        .send({ from: account });
-
-      console.log(tx);
-      window.location.href = "/profile";
+        if(form === "officer") {
+            const tx = await contract.methods
+            .registerOfficer(name, description)
+            .send({ from: account });
+            console.log(tx);
+        } else {
+            const tx = await contract.methods
+            .registerUser(name, description, form)
+            .send({ from: account });
+            console.log(tx);
+        }
+    //   window.location.href = "/profile";
     } catch (err) {
       console.log("Error registering user", err);
     }

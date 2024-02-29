@@ -11,15 +11,16 @@ export default function Challenge() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentChallengeDetails, setCurrentChallengeDetails] = useState();
   const {contract, account} = useContext(Web3Context);
-  
+
+
   async function fetchAllChallenges(){
     try{
       const res = await contract?.methods?.getAllComplaints().call({from:account});
       console.log(res)
-    setChallenges(res);
-    }
-    catch(err){
-      console.err(err);
+    //   const res = await contract?.methods?.getAddressFromOfficerId(0).call({from:account});
+        setChallenges(res);
+    }catch(err){
+      console.log(err);
     }
   }
   

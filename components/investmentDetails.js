@@ -15,7 +15,7 @@ export default function InvestmentDetails() {
   async function getInvestorsInvestments() {
     try {
       const res = await contract?.methods
-        ?.getInvestorsInvestments()
+        ?.getInvestorsForInvestments()
         .call({ from: account });
       console.log(res);
       setInvestments(res);

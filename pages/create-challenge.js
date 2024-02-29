@@ -15,6 +15,11 @@ export default function CreateFarm() {
   const { contract, account } = useContext(Web3Context);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  function handleDate(date) {
+    var dateObject = new Date(date);
+    var seconds = dateObject.getTime()/1000;
+    return seconds;
+  }
   async function createChallenge() {
     try {
       const securityAmountInWei = Web3.utils.toWei(
@@ -22,7 +27,7 @@ export default function CreateFarm() {
         "ether"
       );
       const tx = await contract?.methods
-        .createComplaint(parseInt(challengeDetails.farmId), challengeDetails.reason, challengeDetails.documents, challengeDetails.deadline)
+        .createComplaint(parseInt(challengeDetails.farmId), challengeDetails.reason, challengeDetails.documents, handleDate(challengeDetails.deadline))
         .send({ from: account, value: securityAmountInWei });
       console.log(tx);
       window.location.href = "/challenge";

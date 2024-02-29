@@ -2,9 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/create-campaign": "pages/create-campaign.js",
+  "/create-challenge": "pages/create-challenge.js",
   "/profile": "pages/profile.js",
-  "/challenge": "pages/challenge.js",
-  "/campaigns": "pages/campaigns.js",
-  "/": "pages/index.js"
+  "/challenge": "pages/challenge.js"
 }
