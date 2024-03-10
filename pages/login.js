@@ -26,7 +26,7 @@ export default function Login() {
             .send({ from: account });
             console.log(tx);
         }
-    //   window.location.href = "/profile";
+      window.location.href = "/profile";
     } catch (err) {
       console.log("Error registering user", err);
     }

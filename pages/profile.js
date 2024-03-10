@@ -5,10 +5,15 @@ import {
   CogIcon,
   UserCircleIcon,
   CurrencyDollarIcon,
+  RectangleStackIcon,
+  BellAlertIcon,
+  GlobeAsiaAustraliaIcon,
 } from "@heroicons/react/24/outline";
 import { useContext, useState } from "react";
 import Web3Context from "../context/web3-context";
-import AllocatedChallenge from "../components/allocatedChallenge";
+import AllocatedChallenge from "../components/officer/allocatedChallenge";
+import AllocatedCampaigns from "../components/officer/allocatedCampaigns";
+import AllocatedFarms from "../components/officer/allocatedFarms";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -17,7 +22,7 @@ function classNames(...classes) {
 export default function Profile() {
   const [option, setOption] = useState("profile");
   const { user, officer } = useContext(Web3Context);
-  console.log(officer);
+
   return (
     <div className="pt-6 bg-white text-gray-700">
       {/* <main className="relative -mt-32"> */}
@@ -50,28 +55,74 @@ export default function Profile() {
                   <span className="truncate">Profile</span>
                 </a>
                 {officer?.name != "" && (
+                  <>
+                  <a
+                      onClick={() => {
+                        setOption("farms");
+                      }}
+                      className={classNames(
+                        option === "farms"
+                          ? "bg-indigo-50 border-indigo-500 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-700"
+                          : "border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900",
+                        "group border-l-4 px-3 py-2 flex items-center text-sm font-medium cursor-pointer"
+                      )}
+                    >
+                      <GlobeAsiaAustraliaIcon
+                        className={classNames(
+                          option === "farms"
+                            ? "text-indigo-500 group-hover:text-indigo-500"
+                            : "text-gray-400 group-hover:text-gray-500",
+                          "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">Farms</span>
+                    </a>
                     <a
-                    onClick={() => {
-                      setOption("challenges");
-                    }}
-                    className={classNames(
-                      option === "challenges"
-                        ? "bg-indigo-50 border-indigo-500 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-700"
-                        : "border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900",
-                      "group border-l-4 px-3 py-2 flex items-center text-sm font-medium cursor-pointer"
-                    )}
-                  >
-                    <CurrencyDollarIcon
+                      onClick={() => {
+                        setOption("challenges");
+                      }}
                       className={classNames(
                         option === "challenges"
-                          ? "text-indigo-500 group-hover:text-indigo-500"
-                          : "text-gray-400 group-hover:text-gray-500",
-                        "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                          ? "bg-indigo-50 border-indigo-500 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-700"
+                          : "border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900",
+                        "group border-l-4 px-3 py-2 flex items-center text-sm font-medium cursor-pointer"
                       )}
-                      aria-hidden="true"
-                    />
-                    <span className="truncate">Challenges</span>
-                  </a>
+                    >
+                      <BellAlertIcon
+                        className={classNames(
+                          option === "challenges"
+                            ? "text-indigo-500 group-hover:text-indigo-500"
+                            : "text-gray-400 group-hover:text-gray-500",
+                          "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">Challenges</span>
+                    </a>
+                    <a
+                      onClick={() => {
+                        setOption("campaigns");
+                      }}
+                      className={classNames(
+                        option === "campaigns"
+                          ? "bg-indigo-50 border-indigo-500 text-indigo-700 hover:bg-indigo-50 hover:text-indigo-700"
+                          : "border-transparent text-gray-900 hover:bg-gray-50 hover:text-gray-900",
+                        "group border-l-4 px-3 py-2 flex items-center text-sm font-medium cursor-pointer"
+                      )}
+                    >
+                      <RectangleStackIcon
+                        className={classNames(
+                          option === "campaigns"
+                            ? "text-indigo-500 group-hover:text-indigo-500"
+                            : "text-gray-400 group-hover:text-gray-500",
+                          "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                        )}
+                        aria-hidden="true"
+                      />
+                      <span className="truncate">Campaigns</span>
+                    </a>
+                  </>
                 )}
                 {user?.userType === "farmer" && (
                   <a
@@ -97,7 +148,7 @@ export default function Profile() {
                     <span className="truncate">Farms</span>
                   </a>
                 )}
-                
+
                 {user?.userType === "investor" && (
                   <a
                     onClick={() => {
@@ -129,6 +180,8 @@ export default function Profile() {
             {option === "account" && <AccountDetails />}
             {option === "investments" && <InvestmentDetails />}
             {option === "challenges" && <AllocatedChallenge />}
+            {option === "campaigns" && <AllocatedCampaigns />}
+            {option === "farms" && <AllocatedFarms />}
           </div>
         </div>
       </div>

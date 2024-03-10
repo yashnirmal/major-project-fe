@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import Web3Context from "../context/web3-context";
+import Link from "next/link";
 
 const user = {
   name: "Debbie Lewis",
@@ -45,9 +46,14 @@ export default function InvestmentDetails() {
 
           <div>
             {investments.length === 0 && (
-              <p className="text-center font-semibold text-base mt-6">
-                No haven't made any investments yet!
-              </p>
+              <div className="flex flex-col items-center gap-4">
+                <p className="text-center font-semibold text-base mt-6">
+                  You haven't made any investments yet!
+                </p>
+                <Link href="/campaigns" className="text-indigo-600 underline text-center">
+                  Go to campaigns
+                </Link>
+              </div>
             )}
           </div>
         </div>

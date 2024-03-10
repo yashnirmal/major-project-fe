@@ -7,6 +7,7 @@ import Web3 from 'web3'
 export default function CreateFarm() {
   const [challengeDetails, setChallengeDetails] = useState({
     farmId: "",
+    campaignId: "",
     reason: "",
     documents: [""],
     deadline: "",
@@ -27,7 +28,7 @@ export default function CreateFarm() {
         "ether"
       );
       const tx = await contract?.methods
-        .createComplaint(parseInt(challengeDetails.farmId), challengeDetails.reason, challengeDetails.documents, handleDate(challengeDetails.deadline))
+        .createComplaint(parseInt(challengeDetails.farmId),parseInt(challengeDetails.campaignId), challengeDetails.reason, challengeDetails.documents, handleDate(challengeDetails.deadline))
         .send({ from: account, value: securityAmountInWei });
       console.log(tx);
       window.location.href = "/challenge";
@@ -72,6 +73,33 @@ export default function CreateFarm() {
                         setChallengeDetails({
                           ...challengeDetails,
                           farmId: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                >
+                  Campaign Id
+                </label>
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                  <div className="max-w-lg flex rounded-md shadow-sm">
+                    <input
+                      type="number"
+                      name="username"
+                      id="username"
+                      autoComplete="username"
+                      className="max-w-lg text-gray-700 p-2 shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md"
+                      value={challengeDetails.campaignId}
+                      onChange={(e) => {
+                        setChallengeDetails({
+                          ...challengeDetails,
+                          campaignId: e.target.value,
                         });
                       }}
                     />
